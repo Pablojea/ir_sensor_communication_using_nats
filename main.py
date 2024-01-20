@@ -1,5 +1,6 @@
 import asyncio
 import argparse
+import nats
 
 async def main():
 
@@ -31,6 +32,18 @@ async def main():
     print(f"interval: {interval}")
     print(f"sensor_range: {data_range}")
 
+
+    async def message_handler(msg):
+        data = msg.data.decode()
+        print(data)
+
+
+    nats_conection = await nats.connect('nats://localhost:4222')
+    sensor_control_sub = await nats_conection.subscribe("ir_sensor.control", cb=message_handler)
+
+    while True:
+        await nats_conection.publish('ir_sensor.data', b'Dummy Data')
+        await asyncio.sleep(interval)
 
 if __name__ == '__main__':
     asyncio.run(main())
