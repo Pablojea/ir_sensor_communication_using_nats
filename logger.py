@@ -21,9 +21,11 @@ class Logger:
     def paused(self):
         uptime = time.time() - self.start_time
         logging.info(f'Application paused   uptime: {uptime}s   packages sent: {self.packages_sent}\n')
-        self.start_time = time.time()
+
+        self.packages_sent = 0
 
     def resumed(self):
+        self.start_time = time.time()
         logging.info('Application resumed.\n')
 
     def not_implemented(self):
